@@ -70,7 +70,11 @@ fun RightButton(currentAngle: Float, onClick: () -> Unit) {
     }
 }
 
-// 메인 레이아웃에 보여 줄 버튼들을 표시 할 함수
+/*
+* 메인 레이아웃에 보여 줄 Left, Right 버튼들을 배치하는 함수
+* 버튼 클릭시 currentAngle 을 확인하고 현재 값이 최대/ 최소 값이면 "최대 각도 입니다" 라는 토스트 메시지를 띄우고,
+* 최대/최소 값이 아니면 파이어베이스 내의 Angle 값을 클릭한 버튼 방향으로 설정한다.
+*/
 @Composable
 fun MainButton(mainViewModel: MainViewModel) {
     val context = LocalContext.current
@@ -85,15 +89,15 @@ fun MainButton(mainViewModel: MainViewModel) {
         LeftButton(
             currentAngle = currentAngle,
             onClick = {
-                if(currentAngle>2.5) mainViewModel.changeAngle("Left")
-                else Toast.makeText(context,"최대 각도 입니다.",Toast.LENGTH_SHORT).show()
+                if(currentAngle>600) mainViewModel.changeAngle("Left")
+                else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )
         RightButton(
             currentAngle = currentAngle,
             onClick = {
-                if(currentAngle<12.5) mainViewModel.changeAngle("Right")
-                else Toast.makeText(context,"최대 각도 입니다.",Toast.LENGTH_SHORT).show()
+                if(currentAngle<1500) mainViewModel.changeAngle("Right")
+                else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )
     }

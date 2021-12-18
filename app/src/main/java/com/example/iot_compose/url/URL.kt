@@ -1,5 +1,6 @@
 package com.example.iot_compose.url
 
+// URL 들을 저장하는 객체
 object URL {
     const val INSTANCE = "https://iotcomposeproject-default-rtdb.asia-southeast1.firebasedatabase.app"
     const val CurrentAngle = "motorControl/changeAngle/CurrentAngle"

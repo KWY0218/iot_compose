@@ -1,9 +1,6 @@
 package com.example.iot_compose.ui.webview
 
-import android.app.NotificationManager
-import android.content.Context
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.iot_compose.url.URL.StreamUrl
 
+// 스트리밍 할 웹뷰를 설정한다.
 @Composable
 fun WebStream() {
     AndroidView(

@@ -13,6 +13,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.iot_compose.MainViewModel
 import com.example.iot_compose.R
 
+// alarmState 의 값을 관찰하다가 "True" 가 되면 알림을 푸쉬하고 alarmState 를 "False" 로 바꾼다.
 @Composable
 fun PushNotification(mainViewModel: MainViewModel){
     val alarmState: String by mainViewModel.alarmState.observeAsState("")
@@ -22,7 +23,7 @@ fun PushNotification(mainViewModel: MainViewModel){
     }
 }
 
-// 알람 객체 생성
+// 알림 객체 생성
 @Composable
 private fun NotificationMessage(){
     val context = LocalContext.current
@@ -41,7 +42,7 @@ private fun NotificationMessage(){
     }
 }
 
-// 시스템에 알림 채널 입력
+// 시스템에 알림 채널 설정
 @Composable
 private fun createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

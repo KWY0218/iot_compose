@@ -26,7 +26,7 @@ import com.example.iot_compose.ui.theme.Iot_composeTheme
 import com.example.iot_compose.ui.theme.TextColor
 import com.example.iot_compose.ui.webview.WebStream
 
-
+// UI에 관련된 것을 다루는 역할을 한다
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModelFactory(Repository())
@@ -41,6 +41,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/*
+*   Title() : 상단 Text 를 표현한다.
+    WebStream() : 스트리밍을 위한 웹뷰를 표현한다.
+    MainButton(mainViewModel) : left, right 버튼을 표현한다.
+    PushNotification(mainViewModel) : 외부인이 감지되면 알람을 울리는 함수
+*/
 @Composable
 fun Total(mainViewModel: MainViewModel) {
     Title()
@@ -49,6 +55,7 @@ fun Total(mainViewModel: MainViewModel) {
     PushNotification(mainViewModel)
 }
 
+// Title() : 상단 Text 를 표현한다.
 @Composable
 fun Title(){
     Text(

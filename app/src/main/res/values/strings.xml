@@ -5,4 +5,5 @@
     <string name="warning_topic">수상한 사람 감지</string>
     <string name="warning_msg">수상한 사람 감지됐습니다.</string>
     <string name="channel_name">IoT</string>
+    <string name="max_min_msg">최대 각도 입니다.></string>
 </resources>
