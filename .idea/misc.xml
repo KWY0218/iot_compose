@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/wodrk/.gradle/caches/transforms-3/ede62010591ea6b59d164ac2e1e26ce3/transformed/jetified-play-services-base-17.1.0/res/drawable/common_google_signin_btn_icon_light.xml" value="0.3453125" />
+        <entry key="..\:/Users/wodrk/Desktop/Android_ WorkSpace/compose_iot_project/app/src/main/res/drawable/warning.xml" value="0.3453125" />
+        <entry key="..\:/Users/wodrk/Desktop/Android_ WorkSpace/compose_iot_project/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3453125" />
+        <entry key="..\:/Users/wodrk/Desktop/Android_ WorkSpace/compose_iot_project/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3453125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
