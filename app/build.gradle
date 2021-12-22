@@ -49,6 +49,8 @@ android {
 }
 
 dependencies {
+    //lifecycleowner
+    implementation("androidx.lifecycle:lifecycle-service:2.4.0")
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:29.0.2')
 

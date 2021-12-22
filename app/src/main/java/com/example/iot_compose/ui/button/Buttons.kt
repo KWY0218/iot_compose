@@ -1,6 +1,5 @@
 package com.example.iot_compose.ui.button
 
-import androidx.compose.runtime.livedata.observeAsState
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -10,6 +9,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +22,6 @@ import com.example.iot_compose.MainViewModel
 import com.example.iot_compose.R
 import com.example.iot_compose.ui.theme.BtnColor
 import com.example.iot_compose.ui.theme.Iot_composeTheme
-import com.example.iot_compose.ui.theme.TextColor
 
 
 // 왼쪽 버튼을 표현하는 함수
