@@ -27,7 +27,7 @@ import com.example.iot_compose.ui.theme.Iot_composeTheme
 // 왼쪽 버튼을 표현하는 함수
 @Composable
 fun LeftButton(currentAngle: Float, onClick: () -> Unit) {
-    Log.d("LeftButton", currentAngle.toString())
+    Log.d("ButtonScreen", currentAngle.toString())
     Button(
         contentPadding = PaddingValues(
             horizontal = 26.dp,
@@ -50,6 +50,7 @@ fun LeftButton(currentAngle: Float, onClick: () -> Unit) {
 // 오른쪽 버튼을 표현하는 함수
 @Composable
 fun RightButton(currentAngle: Float, onClick: () -> Unit) {
+    Log.d("ButtonScreen", currentAngle.toString())
     Button(
         contentPadding = PaddingValues(
             horizontal = 26.dp,
@@ -77,7 +78,6 @@ fun RightButton(currentAngle: Float, onClick: () -> Unit) {
 @Composable
 fun MainButton(mainViewModel: MainViewModel) {
     val context = LocalContext.current
-    val currentAngle: Float by mainViewModel.currentAngle.observeAsState(0F)
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -86,26 +86,18 @@ fun MainButton(mainViewModel: MainViewModel) {
         verticalAlignment = Alignment.Bottom
     ) {
         LeftButton(
-            currentAngle = currentAngle,
+            currentAngle = mainViewModel.uiState.angle,
             onClick = {
-                if(currentAngle>600) mainViewModel.changeAngle("Left")
+                if(mainViewModel.uiState.angle>600) mainViewModel.changeAngle("Left")
                 else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )
         RightButton(
-            currentAngle = currentAngle,
+            currentAngle = mainViewModel.uiState.angle,
             onClick = {
-                if(currentAngle<1500) mainViewModel.changeAngle("Right")
+                if(mainViewModel.uiState.angle<1500) mainViewModel.changeAngle("Right")
                 else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview2() {
-    Iot_composeTheme {
-
     }
 }
