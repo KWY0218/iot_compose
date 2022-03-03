@@ -14,7 +14,6 @@ class GetAlarmStateUseCase @Inject constructor(
         while (true){
             val result = repository.getAlarmState()
             emit(result)
-            delay(1000)
         }
     }
 }

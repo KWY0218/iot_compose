@@ -18,7 +18,10 @@ import com.example.iot_compose.usecase.GetAlarmStateUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 // service 내에서 alarmState 를 관찰하기 위해서 LifecycleService 사용
@@ -30,13 +33,25 @@ class MainService : LifecycleService() {
     @Inject
     lateinit var changeAlarmStateUseCase: ChangeAlarmStateUseCase
 
-    // alarmState 를 관찰하다가 True 가 되면, notification 을 푸쉬하고
-    // changeAlarmState 함수를 통해서 Firebase 내에 있는 pushAlarm API 상태를 False 로 바꾼다.
+    lateinit var alarmState:StateFlow<Result>
+
+    /*
+        alarmState 를 관찰하다가 True 가 되면, notification 을 푸쉬하고
+        changeAlarmState 함수를 통해서 Firebase 내에 있는 pushAlarm API 상태를 False 로 바꾼다.
+
+        coldStream 인 Flow 를 hotStream 인 stateFlow 로 바꾼 후,
+        파이어베이스 alarmState 의 값이 바뀔 때에만 데이터를 받게 만든다.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         lifecycleScope.launch {
-            getAlarmStateUseCase().collectLatest {
+            alarmState = getAlarmStateUseCase().stateIn(
+                initialValue = Result.Loading,
+                started = SharingStarted.WhileSubscribed(0),
+                scope = lifecycleScope
+            )
+            alarmState.collectLatest {
                 when (it) {
                     is Result.Success<*> -> {
                         val data = it.data as String
@@ -59,7 +74,7 @@ class MainService : LifecycleService() {
         super.onCreate()
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, FLAG_IMMUTABLE)
+                PendingIntent.getActivity(this, 100, notificationIntent, FLAG_IMMUTABLE)
             }
 
         val notification: Notification =
