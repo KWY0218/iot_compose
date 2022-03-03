@@ -33,7 +33,6 @@ class RepositoryImpl @Inject constructor(): Repository {
                 response = Result.Success(value)
             }
             override fun onCancelled(error: DatabaseError) {
-                Log.w(ContentValues.TAG, "Failed to read value.", error.toException())
                 response = Result.Fail("Failed to read value. ${error.toException()}")
             }
         })
@@ -50,7 +49,6 @@ class RepositoryImpl @Inject constructor(): Repository {
                 response = Result.Success(value)
             }
             override fun onCancelled(error: DatabaseError) {
-                Log.w(ContentValues.TAG, "Failed to read value.", error.toException())
                 response = Result.Fail("Failed to read value. ${error.toException()}")
             }
         })

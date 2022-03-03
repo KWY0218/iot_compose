@@ -3,42 +3,51 @@ package com.example.iot_compose.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
-import android.app.Service
 import android.content.Intent
-import android.os.Binder
 import android.os.Build
-import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.iot_compose.MainActivity
-import com.example.iot_compose.MainViewModel
 import com.example.iot_compose.R
-import com.example.iot_compose.repository.RepositoryImpl
+import com.example.iot_compose.state.Result
+import com.example.iot_compose.usecase.ChangeAlarmStateUseCase
+import com.example.iot_compose.usecase.GetAlarmStateUseCase
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 // service 내에서 alarmState 를 관찰하기 위해서 LifecycleService 사용
-class MainService : Service(){
-    private val binder = LocalBinder()
-    var setAlarm = false
+@AndroidEntryPoint
+class MainService : LifecycleService() {
+    @Inject
+    lateinit var getAlarmStateUseCase: GetAlarmStateUseCase
 
-    inner class LocalBinder: Binder(){
-        fun getService(): MainService = this@MainService
-    }
-
-    override fun onBind(p0: Intent?): IBinder {
-        return binder
-    }
+    @Inject
+    lateinit var changeAlarmStateUseCase: ChangeAlarmStateUseCase
 
     // alarmState 를 관찰하다가 True 가 되면, notification 을 푸쉬하고
     // changeAlarmState 함수를 통해서 Firebase 내에 있는 pushAlarm API 상태를 False 로 바꾼다.
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        if(setAlarm){
-            NotificationMessage()
-            setAlarm = false
+        lifecycleScope.launch {
+            getAlarmStateUseCase().collectLatest {
+                when (it) {
+                    is Result.Success<*> -> {
+                        val data = it.data as String
+                        if (data == "True") {
+                            NotificationMessage()
+                            changeAlarmStateUseCase()
+                        }
+                    }
+                    is Result.Fail<*> -> Log.d("MainService", "${it.data}")
+                }
+            }
         }
         // 앱을 종료해도 서비스가 작동하도록 한다.
         return START_STICKY
@@ -53,21 +62,21 @@ class MainService : Service(){
                 PendingIntent.getActivity(this, 0, notificationIntent, FLAG_IMMUTABLE)
             }
 
-        val notification: Notification = Notification.Builder(this, getString(R.string.channel_name))
-            .setContentTitle(getText(R.string.notification_title))
-            .setContentText(getText(R.string.notification_message))
-            .setSmallIcon(R.drawable.icon)
-            .setContentIntent(pendingIntent)
-            .setTicker(getText(R.string.ticker_text))
-            .build()
+        val notification: Notification =
+            Notification.Builder(this, getString(R.string.channel_name))
+                .setContentTitle(getText(R.string.notification_title))
+                .setContentText(getText(R.string.notification_message))
+                .setSmallIcon(R.drawable.icon)
+                .setContentIntent(pendingIntent)
+                .setTicker(getText(R.string.ticker_text))
+                .build()
 
         startForeground(1, notification)
-
     }
 
     // Notification 설정
     @RequiresApi(Build.VERSION_CODES.O)
-    fun NotificationMessage(){
+    fun NotificationMessage() {
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, FLAG_IMMUTABLE)

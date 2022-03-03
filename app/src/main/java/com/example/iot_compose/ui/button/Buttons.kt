@@ -8,20 +8,16 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.iot_compose.MainViewModel
+import com.example.iot_compose.ui.MainViewModel
 import com.example.iot_compose.R
 import com.example.iot_compose.ui.theme.BtnColor
-import com.example.iot_compose.ui.theme.Iot_composeTheme
 
 
 // 왼쪽 버튼을 표현하는 함수
@@ -86,16 +82,18 @@ fun MainButton(mainViewModel: MainViewModel) {
         verticalAlignment = Alignment.Bottom
     ) {
         LeftButton(
-            currentAngle = mainViewModel.uiState.angle,
+            currentAngle = mainViewModel.angleState,
             onClick = {
-                if(mainViewModel.uiState.angle>600) mainViewModel.changeAngle("Left")
+                mainViewModel.getAngle()
+                if(mainViewModel.angleState>600) mainViewModel.changeAngle("Left")
                 else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )
         RightButton(
-            currentAngle = mainViewModel.uiState.angle,
+            currentAngle = mainViewModel.angleState,
             onClick = {
-                if(mainViewModel.uiState.angle<1500) mainViewModel.changeAngle("Right")
+                mainViewModel.getAngle()
+                if(mainViewModel.angleState<1500) mainViewModel.changeAngle("Right")
                 else Toast.makeText(context,context.getString(R.string.max_min_msg),Toast.LENGTH_SHORT).show()
             }
         )

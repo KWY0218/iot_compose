@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.example.iot_compose.MainViewModel
 import com.example.iot_compose.R
 import com.example.iot_compose.ui.button.MainButton
 import com.example.iot_compose.ui.webview.WebStream
