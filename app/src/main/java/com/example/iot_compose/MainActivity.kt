@@ -8,6 +8,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.iot_compose.service.MainService
 import com.example.iot_compose.ui.MainScreen
 import com.example.iot_compose.ui.MainViewModel
@@ -61,6 +64,17 @@ class MainActivity : ComponentActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+        } else{
+            val name = getString(R.string.channel_name)
+            val importance = NotificationCompat.PRIORITY_HIGH
+            val notificationManager: NotificationManagerCompat =
+                NotificationManagerCompat.from(this)
+            notificationManager.createNotificationChannel(
+                NotificationChannelCompat.Builder(
+                    name, importance
+                ).build()
+            )
+
         }
     }
 

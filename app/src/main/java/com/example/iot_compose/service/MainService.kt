@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,6 @@ class MainService : LifecycleService() {
         coldStream 인 Flow 를 hotStream 인 stateFlow 로 바꾼 후,
         파이어베이스 alarmState 의 값이 바뀔 때에만 데이터를 받게 만든다.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         lifecycleScope.launch {
@@ -69,7 +69,6 @@ class MainService : LifecycleService() {
     }
 
     // foregroundService 설정
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         val pendingIntent: PendingIntent =
@@ -78,34 +77,56 @@ class MainService : LifecycleService() {
             }
 
         val notification: Notification =
-            Notification.Builder(this, getString(R.string.channel_name))
-                .setContentTitle(getText(R.string.notification_title))
-                .setContentText(getText(R.string.notification_message))
-                .setSmallIcon(R.drawable.icon)
-                .setContentIntent(pendingIntent)
-                .setTicker(getText(R.string.ticker_text))
-                .build()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Notification.Builder(this, getString(R.string.channel_name))
+                    .setContentTitle(getText(R.string.notification_title))
+                    .setContentText(getText(R.string.notification_message))
+                    .setSmallIcon(R.drawable.icon)
+                    .setContentIntent(pendingIntent)
+                    .setTicker(getText(R.string.ticker_text))
+                    .build()
+            } else {
+                NotificationCompat.Builder(this, getString(R.string.channel_name))
+                    .setContentTitle(getText(R.string.notification_title))
+                    .setContentText(getText(R.string.notification_message))
+                    .setSmallIcon(R.drawable.icon)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                    .build()
+            }
 
         startForeground(1, notification)
     }
 
     // Notification 설정
-    @RequiresApi(Build.VERSION_CODES.O)
     fun NotificationMessage() {
         val pendingIntent: PendingIntent =
             Intent(this, MainActivity::class.java).let { notificationIntent ->
                 PendingIntent.getActivity(this, 0, notificationIntent, FLAG_IMMUTABLE)
             }
 
-        val pushNotification = Notification.Builder(this, getString(R.string.channel_name))
-            .setContentTitle(getText(R.string.warning_topic))
-            .setContentText(getText(R.string.warning_msg))
-            .setSmallIcon(R.drawable.warning)
-            .setContentIntent(pendingIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notification = Notification.Builder(this, getString(R.string.channel_name))
+                .setContentTitle(getText(R.string.warning_topic))
+                .setContentText(getText(R.string.warning_msg))
+                .setSmallIcon(R.drawable.warning)
+                .setContentIntent(pendingIntent)
 
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(R.string.channel_name, pushNotification.build())
+            with(NotificationManagerCompat.from(this)) {
+                // notificationId is a unique int for each notification that you must define
+                notify(R.string.channel_name, notification.build())
+            }
+        } else {
+            val notification = NotificationCompat.Builder(this, getString(R.string.channel_name))
+                .setContentTitle(getText(R.string.warning_topic))
+                .setContentText(getText(R.string.warning_msg))
+                .setSmallIcon(R.drawable.warning)
+                .setContentIntent(pendingIntent)
+
+            with(NotificationManagerCompat.from(this)) {
+                // notificationId is a unique int for each notification that you must define
+                notify(R.string.channel_name, notification.build())
+            }
         }
     }
 }
